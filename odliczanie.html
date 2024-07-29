@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odliczanie do Daty</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6f2;
+            background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><text y="50%" font-size="50">🍓</text></svg>');
+            background-repeat: repeat;
+            font-family: Arial, sans-serif;
+        }
+        .countdown-container {
+            text-align: center;
+            background-color: rgba(255, 230, 242, 0.9);
+            border: 2px solid #ffb3d9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .countdown {
+            font-size: 2rem;
+            color: #ff66b2;
+        }
+        .input-container {
+            margin-bottom: 20px;
+        }
+        .input-container input {
+            padding: 10px;
+            border: 1px solid #ffb3d9;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        .input-container button {
+            padding: 10px 20px;
+            background-color: #ff66b2;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+        }
+        .input-container button:hover {
+            background-color: #e0559b;
+        }
+    </style>
+</head>
+<body>
+    <div class="countdown-container">
+        <h1>Odliczanie do wybranej daty</h1>
+        <div class="input-container">
+            <label for="startDate">Data początkowa:</label>
+            <input type="datetime-local" id="startDate">
+            <label for="targetDate">Data docelowa:</label>
+            <input type="datetime-local" id="targetDate">
+            <button onclick="startCountdown()">Rozpocznij odliczanie</button>
+        </div>
+        <div class="countdown" id="countdown"></div>
+    </div>
+
+    <script>
+        function startCountdown() {
+            // Pobierz daty wprowadzone przez użytkownika
+            const startDateInput = document.getElementById("startDate").value;
+            const targetDateInput = document.getElementById("targetDate").value;
+
+            if (!startDateInput || !targetDateInput) {
+                alert("Proszę wprowadzić obie daty.");
+                return;
+            }
+
+            const startDate = new Date(startDateInput).getTime();
+            const targetDate = new Date(targetDateInput).getTime();
+
+            // Sprawdź, czy data początkowa jest przed datą docelową
+            if (startDate >= targetDate) {
+                alert("Data początkowa musi być przed datą docelową.");
+                return;
+            }
+
+            // Aktualizuj odliczanie co sekundę
+            const countdownInterval = setInterval(function() {
+                // Obecna data i czas
+                const now = new Date().getTime();
+
+                // Różnica między datą docelową a obecną
+                const distance = targetDate - now;
+
+                // Obliczenia czasu dla dni, godzin, minut i sekund
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Wyświetl wynik w elemencie z id="countdown"
+                document.getElementById("countdown").innerHTML = days + "d " + hours + "h "
+                + minutes + "m " + seconds + "s ";
+
+                // Jeśli odliczanie skończy się, wyświetl tekst
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById("countdown").innerHTML = "WYDARZENIE SIĘ ROZPOCZĘŁO!";
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
